@@ -1,141 +1,73 @@
-// ELEC2645 Unit 2 Project Template
-// Command Line Application Menu Handling Code
-
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
 #include <math.h>
+#include <string.h>
 #include "funcs.h"
 
-/* Prototypes mirroring the C++ version */
-static void main_menu(void);            /* runs in the main loop */
-static void print_main_menu(void);      /* output the main menu description */
-static int  get_user_input(void);       /* get a valid integer menu choice */
-static void select_menu_item(int input);/* run code based on user's choice */
-static void go_back_to_main(void);      /* wait for 'b'/'B' to continue */
-static int  is_integer(const char *s);  /* validate integer string */
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
 
-int main(void)
-{
-    /* this will run forever until we call exit(0) in select_menu_item() */
-    for(;;) {
-        main_menu();
+// FUNCTION PROTOTYPES
+void main_menu_with_features(void);
+void example_calc(void);
+void run_tests(void);
+void load_results(void);
+
+// AUTOMATED TESTS
+
+#define RUN_TESTS 1
+
+double test_add(double a, double b) {
+    return a + b;
+}
+
+void run_tests() {
+    printf("\n===== AUTOMATED TESTS =====\n");
+
+    double r = test_add(3, 4);
+    printf("Test add(3,4) → %.2f  [%s]\n",
+           r, (r == 7 ? "PASS" : "FAIL"));
+
+    double r2 = test_add(5, 5);
+    printf("Test add(5,5) → %.2f  [%s]\n",
+           r2, (r2 == 11 ? "PASS" : "FAIL"));
+
+    printf("===========================\n\n");
+}
+
+// MAIN MENU 
+
+void main_menu_with_features(void) {
+    if (RUN_TESTS) run_tests();
+    load_results();
+
+    while (1) {
+        print_main_menu();
+        int choice = get_user_input();
+        select_menu_item(choice);
     }
-    /* not reached */
+}
+
+// EXAMPLE CALCULATION 
+
+void example_calc(void) {
+    double angle = M_PI / 4;
+    double sine_val = sin(angle);
+
+    printf("\nExample Calculation: sin(pi/4) = %.4f\n", sine_val);
+
+    save_result_val("sin(pi/4)", sine_val);
+    print_bar_graph("Sine Value", sine_val * 50);
+}
+
+// MAIN FUNCTION 
+
+int main() {
+    printf("=== Engineering Tools Program ===\n");
+
+    example_calc(); // file saving, graphing
+    main_menu_with_features(); // run full menu system
+
     return 0;
-}
-
-static void main_menu(void)
-{
-    print_main_menu();
-    {
-        int input = get_user_input();
-        select_menu_item(input);
-    }
-}
-
-static int get_user_input(void)
-{
-    enum { MENU_ITEMS = 5 };   /* 1..4 = items, 5 = Exit */
-    char buf[128];
-    int valid_input = 0;
-    int value = 0;
-
-    do {
-        printf("\nSelect item: ");
-        if (!fgets(buf, sizeof(buf), stdin)) {
-            /* EOF or error; bail out gracefully */
-            puts("\nInput error. Exiting.");
-            exit(1);
-        }
-
-        // strip trailing newline
-        buf[strcspn(buf, "\r\n")] = '\0';
-
-        if (!is_integer(buf)) {
-            printf("Enter an integer!\n");
-            valid_input = 0;
-        } else {
-            value = (int)strtol(buf, NULL, 10);
-            if (value >= 1 && value <= MENU_ITEMS) {
-                valid_input = 1;
-            } else {
-                printf("Invalid menu item!\n");
-                valid_input = 0;
-            }
-        }
-    } while (!valid_input);
-
-    return value;
-}
-
-static void select_menu_item(int input)
-{
-    switch (input) {
-        case 1:
-            menu_item_1();
-            go_back_to_main();
-            break;
-        case 2:
-            menu_item_2();
-            go_back_to_main();
-            break;
-        case 3:
-            menu_item_3();
-            go_back_to_main();
-            break;
-        case 4:
-            menu_item_4();
-            go_back_to_main();
-            break;
-        default:
-            printf("Bye!\n");
-            exit(0);
-    }
-}
-
-static void print_main_menu(void)
-{
-    printf("\n----------- Main menu -----------\n");
-    printf("\n"
-           "\t\t\t\t\t\t\n"
-           "\t1. Menu item 1\t\t\n"
-           "\t2. Menu item 2\t\t\n"
-           "\t3. Menu item 3\t\t\n"
-           "\t4. Menu item 4\t\t\n"
-           "\t5. Exit\t\t\t\t\n"
-           "\t\t\t\t\t\t\n");
-    printf("---------------------------------------------\n");
-}
-
-static void go_back_to_main(void)
-{
-    char buf[64];
-    do {
-        printf("\nEnter 'b' or 'B' to go back to main menu: ");
-        if (!fgets(buf, sizeof(buf), stdin)) {
-            puts("\nInput error. Exiting.");
-            exit(1);
-        }
-        buf[strcspn(buf, "\r\n")] = '\0'; /* strip newline */
-    } while (!(buf[0] == 'b' || buf[0] == 'B') || buf[1] != '\0');
-}
-
-/* Return 1 if s is an optional [+/-] followed by one-or-more digits, else 0. */
-static int is_integer(const char *s)
-{
-    if (!s || !*s) return 0;
-
-    /* optional sign */
-    if (*s == '+' || *s == '-') s++;
-
-    /* must have at least one digit */
-    if (!isdigit((unsigned char)*s)) return 0;
-
-    while (*s) {
-        if (!isdigit((unsigned char)*s)) return 0;
-        s++;
-    }
-    return 1;
 }
