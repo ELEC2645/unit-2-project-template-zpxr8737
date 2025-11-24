@@ -1,7 +1,7 @@
 [![Open in Codespaces](https://classroom.github.com/assets/launch-codespace-2972f46106e565e64193e422d61a12cf1da4916b45550586e14ef0a7c637dd04.svg)](https://classroom.github.com/open-in-codespaces?assignment_repo_id=21783843)
 # ELEC2645 Unit 2 Project
 
-The Engineering Menu Program is a multifunctional software system designed to support electronics and engineering students with analysis, learning, and quick calculations. It integrates several tools into a single menu-driven application written entirely in C. The system focuses on accessibility, speed, and educational value.
+The Engineering Menu Program is a multifunctional software system designed to support engineering students with analysis, learning, and quick calculations. It integrates several tools into a single menu-driven application written entirely in C. The system focuses on accessibility, speed, and educational value.
 
  Key Features
 
